@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using University.Api.Data;
 using University.Api.Entities;
 using University.Api.Models;
@@ -26,6 +27,11 @@ public class StudentController(UniversityDbContext context) : ControllerBase
     public async Task<ActionResult<Student>> GetStudentDetails([FromRoute] Guid id)
     {
         var student = await _context.Students.FindAsync(id);
+
+        if (student is null)
+        {
+            return NotFound();
+        }
 
         return Ok(student);
     }

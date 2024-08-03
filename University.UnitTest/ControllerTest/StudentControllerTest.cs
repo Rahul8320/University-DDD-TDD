@@ -48,11 +48,28 @@ public class StudentControllerTest(WebApplicationFactory<Program> factory)
         ItShouldConfirmTheStudentDetails(request, newStudent);
     }
 
+    [Fact]
+    public async Task GivenIHaveTheWrongId_WhenICheckMyDetails()
+    {
+        var api = CreateStudentApi();
+
+        var wrongId = Guid.NewGuid();
+
+        var (response, _) = await api.GetStudent(wrongId);
+
+        ItShouldNotFoundTheStudent(response);
+    }
+
     private StudentApi CreateStudentApi()
     {
         var client = _factory.CreateClient();
 
         return new StudentApi(client);
+    }
+
+    private static void ItShouldNotFoundTheStudent(HttpResponseMessage response)
+    {
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
     private static void ItShouldRegisterTheStudent(HttpResponseMessage response)
