@@ -15,15 +15,15 @@ public class StudentController(UniversityDbContext context) : ControllerBase
     public async Task<IActionResult> Register([FromBody] RegisterStudentRequest request)
     {
         var student = Student.Register(request);
-        _context.Students.Add(student);
+        await _context.Students.AddAsync(student);
         await _context.SaveChangesAsync();
 
-        return Created($"/api/student/{student.Id}", student);
+        return CreatedAtAction("GetStudentDetails", new { Id = student.Id }, student);
     }
 
     [HttpGet]
     [Route("{id:guid}")]
-    public async Task<IActionResult> GetStudentDetails([FromRoute] Guid id)
+    public async Task<ActionResult<Student>> GetStudentDetails([FromRoute] Guid id)
     {
         var student = await _context.Students.FindAsync(id);
 

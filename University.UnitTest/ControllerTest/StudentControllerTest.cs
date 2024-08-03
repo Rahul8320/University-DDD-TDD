@@ -14,15 +14,13 @@ public class StudentControllerTest(WebApplicationFactory<Program> factory)
     [Fact]
     public async Task GivenIAmAStudent_WhenIRegister()
     {
-        var client = _factory.CreateClient();
+        var api = CreateStudentApi();
+
         var request = new RegisterStudentRequest { Name = "Test Student" };
 
-        var response = await client.PostAsync("/api/student", JsonContent.Create(request));
+        var (response, student) = await api.RegisterStudent(request);
 
-        var student = await response.Content.ReadFromJsonAsync<StudentResponse>();
-
-        var newStudentResponse = await client.GetAsync(response.Headers.Location);
-        var newStudent = await newStudentResponse.Content.ReadFromJsonAsync<StudentResponse>();
+        var (newStudentResponse, newStudent) = await api.GetStudent(response.Headers.Location);
 
         ItShouldRegisterTheStudent(response);
         ItShouldAllocateANewId(student);
@@ -35,20 +33,26 @@ public class StudentControllerTest(WebApplicationFactory<Program> factory)
     [Theory]
     [InlineData("Test Student")]
     [InlineData("Another Student")]
+    [InlineData("Old Student")]
     public async Task GivenIHaveRegister_WhenCheckMyDetails(string studentName)
     {
-        var client = _factory.CreateClient();
+        var api = CreateStudentApi();
+
         var request = new RegisterStudentRequest { Name = studentName };
 
-        var response = await client.PostAsync("/api/student", JsonContent.Create(request));
+        var (response, _) = await api.RegisterStudent(request);
 
-        var student = await response.Content.ReadFromJsonAsync<StudentResponse>();
-
-        var newStudentResponse = await client.GetAsync(response.Headers.Location);
-        var newStudent = await newStudentResponse.Content.ReadFromJsonAsync<StudentResponse>();
+        var (newStudentResponse, newStudent) = await api.GetStudent(response.Headers.Location);
 
         ItShouldFindTheNewStudent(newStudentResponse);
         ItShouldConfirmTheStudentDetails(request, newStudent);
+    }
+
+    private StudentApi CreateStudentApi()
+    {
+        var client = _factory.CreateClient();
+
+        return new StudentApi(client);
     }
 
     private static void ItShouldRegisterTheStudent(HttpResponseMessage response)
@@ -67,7 +71,7 @@ public class StudentControllerTest(WebApplicationFactory<Program> factory)
         var location = response.Headers.Location;
 
         Assert.NotNull(location);
-        Assert.Equal($"/api/student/{student?.Id}", location.ToString());
+        Assert.Equal($"http://localhost/api/Student/{student?.Id}", location.ToString());
     }
 
     private static void ItShouldConfirmTheStudentDetails(RegisterStudentRequest request, StudentResponse? student)
