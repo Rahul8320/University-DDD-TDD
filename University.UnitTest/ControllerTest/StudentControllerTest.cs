@@ -15,14 +15,16 @@ public class StudentControllerTest(WebApplicationFactory<Program> factory)
     public async Task GivenIAmAStudent_WhenIRegister()
     {
         var client = _factory.CreateClient();
+        var request = new RegisterStudentRequest { Name = Guid.NewGuid().ToString() };
 
-        var response = await client.PostAsync("/api/student", null);
+        var response = await client.PostAsync("/api/student", JsonContent.Create(request));
 
         var student = await response.Content.ReadFromJsonAsync<StudentResponse>();
 
         ItShouldRegisterTheStudent(response);
         ItShouldAllocateANewId(student);
         ItShouldShowWhereToLocateNewStudent(response, student);
+        ItShouldConfirmStudentDetails(request, student);
     }
 
     private static void ItShouldRegisterTheStudent(HttpResponseMessage response)
@@ -41,6 +43,12 @@ public class StudentControllerTest(WebApplicationFactory<Program> factory)
         var location = response.Headers.Location;
 
         Assert.NotNull(location);
-        Assert.NotEqual($"/api/student/{student?.Id}", location.ToString());
+        Assert.Equal($"/api/student/{student?.Id}", location.ToString());
+    }
+
+    private static void ItShouldConfirmStudentDetails(RegisterStudentRequest request, StudentResponse? student)
+    {
+        Assert.NotEqual(student?.Name, string.Empty);
+        Assert.Equal(request.Name, student?.Name);
     }
 }

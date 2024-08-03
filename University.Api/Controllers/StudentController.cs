@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using University.Api.Entities;
+using University.Api.Models;
 
 namespace University.Api.Controllers;
 
@@ -8,8 +9,10 @@ namespace University.Api.Controllers;
 public class StudentController : ControllerBase
 {
     [HttpPost]
-    public IActionResult Register()
+    public IActionResult Register([FromBody] RegisterStudentRequest request)
     {
-        return Created("", Student.Register());
+        var student = Student.Register(request);
+
+        return Created($"/api/student/{student.Id}", student);
     }
 }
