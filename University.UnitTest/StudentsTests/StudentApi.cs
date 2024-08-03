@@ -1,7 +1,6 @@
 using System.Net.Http.Json;
-using University.UnitTest.Models;
 
-namespace University.UnitTest.ControllerTest;
+namespace University.UnitTest.StudentsTests;
 
 public class StudentApi(HttpClient client)
 {

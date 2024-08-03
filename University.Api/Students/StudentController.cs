@@ -1,10 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using University.Api.Data;
-using University.Api.Entities;
-using University.Api.Models;
 
-namespace University.Api.Controllers;
+namespace University.Api.Students;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -19,7 +16,7 @@ public class StudentController(UniversityDbContext context) : ControllerBase
         await _context.Students.AddAsync(student);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction("GetStudentDetails", new { Id = student.Id }, student);
+        return CreatedAtAction("GetStudentDetails", new { student.Id }, student);
     }
 
     [HttpGet]

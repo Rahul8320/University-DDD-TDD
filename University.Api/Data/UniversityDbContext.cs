@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using University.Api.Entities;
+using University.Api.Students;
 
 namespace University.Api.Data;
 

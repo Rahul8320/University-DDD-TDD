@@ -1,4 +1,4 @@
-namespace University.Api.Models;
+namespace University.Api.Students;
 
 public class RegisterStudentRequest
 {

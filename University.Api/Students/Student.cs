@@ -1,6 +1,4 @@
-using University.Api.Models;
-
-namespace University.Api.Entities;
+namespace University.Api.Students;
 
 public class Student
 {

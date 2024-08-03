@@ -1,4 +1,4 @@
-namespace University.UnitTest.Models;
+namespace University.UnitTest.StudentsTests;
 
 public class StudentResponse
 {

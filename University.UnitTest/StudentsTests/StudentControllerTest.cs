@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
-using System.Net.Http.Json;
 using University.Api;
-using University.UnitTest.Models;
 
-namespace University.UnitTest.ControllerTest;
+namespace University.UnitTest.StudentsTests;
 
 public class StudentControllerTest(WebApplicationFactory<Program> factory)
     : IClassFixture<WebApplicationFactory<Program>>
