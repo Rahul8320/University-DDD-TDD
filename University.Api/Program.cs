@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using University.Api.Data;
+
 namespace University.Api;
 
 public class Program
@@ -12,6 +15,9 @@ public class Program
         builder.Services.AddSwaggerGen();
 
         builder.Services.AddControllers();
+
+        builder.Services.AddDbContext<UniversityDbContext>(options =>
+            options.UseInMemoryDatabase("University"));
 
         var app = builder.Build();
 
