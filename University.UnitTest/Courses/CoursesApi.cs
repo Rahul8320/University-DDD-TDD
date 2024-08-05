@@ -21,4 +21,9 @@ public class CoursesApi(HttpClient client)
 
         return (response, course);
     }
+
+    public static Uri CourseUriForId(Guid? courseId)
+    {
+        return new Uri($"http://localhost:/api/Courses/{courseId}");
+    }
 }

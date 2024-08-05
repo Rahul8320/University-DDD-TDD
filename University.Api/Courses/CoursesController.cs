@@ -1,24 +1,30 @@
 using Microsoft.AspNetCore.Mvc;
+using University.Api.Data;
 
 namespace University.Api.Courses;
 
 [ApiController]
 [Route("api/[controller]")]
-public class CoursesController : ControllerBase
+public class CoursesController(UniversityDbContext context) : ControllerBase
 {
+    private readonly UniversityDbContext _context = context;
+
     [HttpPost]
-    public IActionResult IncludeInCatalog([FromBody] IncludeCourseInCatalogRequest request)
+    public async Task<ActionResult<Course>> IncludeInCatalog([FromBody] IncludeCourseInCatalogRequest request)
     {
         var course = Course.IncludeInCatalog(request);
 
-        return Created($"/api/courses/{course.Id}", course);
+        await _context.Courses.AddAsync(course);
+        await _context.SaveChangesAsync();
+
+        return CreatedAtAction("GetCourseDetails", new { Id = course.Id }, course);
     }
 
     [HttpGet]
     [Route("{id:guid}")]
-    public IActionResult GetCourseDetails([FromRoute] Guid id)
+    public async Task<ActionResult<Course>> GetCourseDetails([FromRoute] Guid id)
     {
-        var course = new Course { Id = id, Name = "Test Course" };
+        var course = await _context.Courses.FindAsync(id);
 
         return Ok(course);
     }

@@ -37,7 +37,7 @@ public class CoursesTests(WebApplicationFactory<Program> factory) : IClassFixtur
     private static void ItShouldShowWhereToLocateNewCourse(HttpResponseMessage response, CourseResponse? course)
     {
         var location = response.Headers.Location;
-        var uri = $"/api/courses/{course?.Id}";
+        var uri = CoursesApi.CourseUriForId(course?.Id);
 
         Assert.NotNull(location);
         Assert.Equal(uri.ToString(), location.ToString());
@@ -56,6 +56,8 @@ public class CoursesTests(WebApplicationFactory<Program> factory) : IClassFixtur
 
     [Theory]
     [InlineData("Test Course")]
+    [InlineData("Another Course")]
+    [InlineData("Test2 Course")]
     public async Task GivenIHaveIncludedACourse_WhenICheckTheCourseDetails(string courseName)
     {
         var api = new CoursesApi(_factory.CreateClient());
