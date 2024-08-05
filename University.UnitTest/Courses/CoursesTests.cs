@@ -13,11 +13,25 @@ public class CoursesTests(WebApplicationFactory<Program> factory) : IClassFixtur
     {
         var api = new CoursesApi(_factory.CreateClient());
 
-        var (response, course) = await api.IncludeInCatalog();
+        var includeCourseInCatalogRequest = new IncludeCourseInCatalogRequest
+        {
+            Name = Guid.NewGuid().ToString()
+        };
+
+        var (response, course) = await api.IncludeInCatalog(includeCourseInCatalogRequest);
 
         ItShouldIncludeTheCourseInTheCatalog(response);
         ItShouldAllocateANewId(course);
         ItShouldShowWhereToLocateNewCourse(response, course);
+        ItShouldConfirmCourseDetails(includeCourseInCatalogRequest, course);
+    }
+
+    private static void ItShouldConfirmCourseDetails(
+        IncludeCourseInCatalogRequest includeCourseInCatalogRequest,
+        CourseResponse? course)
+    {
+        Assert.NotEqual(string.Empty, course?.Name);
+        Assert.Equal(includeCourseInCatalogRequest.Name, course?.Name);
     }
 
     private static void ItShouldShowWhereToLocateNewCourse(HttpResponseMessage response, CourseResponse? course)

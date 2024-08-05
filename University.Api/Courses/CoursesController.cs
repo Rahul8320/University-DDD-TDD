@@ -7,9 +7,9 @@ namespace University.Api.Courses;
 public class CoursesController : ControllerBase
 {
     [HttpPost]
-    public IActionResult IncludeInCatalog()
+    public IActionResult IncludeInCatalog([FromBody] IncludeCourseInCatalogRequest request)
     {
-        var course = Course.IncludeInCatalog();
+        var course = Course.IncludeInCatalog(request);
 
         return Created($"/api/courses/{course.Id}", course);
     }
