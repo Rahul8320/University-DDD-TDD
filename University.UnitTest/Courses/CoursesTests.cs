@@ -53,4 +53,25 @@ public class CoursesTests(WebApplicationFactory<Program> factory) : IClassFixtur
     {
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
     }
+
+    [Theory]
+    [InlineData("Test Course")]
+    public async Task GivenIHaveIncludedACourse_WhenICheckTheCourseDetails(string courseName)
+    {
+        var api = new CoursesApi(_factory.CreateClient());
+
+        var request = new IncludeCourseInCatalogRequest { Name = courseName };
+
+        var (response, _) = await api.IncludeInCatalog(request);
+
+        var (newCourseResponse, newCourse) = await api.GetCourse(response.Headers.Location);
+
+        ItShouldFindTheNewCourse(newCourseResponse);
+        ItShouldConfirmCourseDetails(request, newCourse);
+    }
+
+    private static void ItShouldFindTheNewCourse(HttpResponseMessage newCourseResponse)
+    {
+        Assert.Equal(HttpStatusCode.OK, newCourseResponse.StatusCode);
+    }
 }

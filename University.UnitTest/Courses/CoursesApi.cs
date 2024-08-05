@@ -13,4 +13,12 @@ public class CoursesApi(HttpClient client)
 
         return (response, course);
     }
+
+    public async Task<(HttpResponseMessage, CourseResponse?)> GetCourse(Uri? uriLocation)
+    {
+        var response = await _client.GetAsync(uriLocation);
+        var course = await response.Content.ReadFromJsonAsync<CourseResponse>();
+
+        return (response, course);
+    }
 }
