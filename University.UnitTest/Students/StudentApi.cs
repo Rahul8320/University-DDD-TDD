@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
 
-namespace University.UnitTest.StudentsTests;
+namespace University.UnitTest.Students;
 
 public class StudentApi(HttpClient client)
 {

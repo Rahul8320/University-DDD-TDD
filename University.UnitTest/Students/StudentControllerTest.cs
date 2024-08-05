@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using University.Api;
 
-namespace University.UnitTest.StudentsTests;
+namespace University.UnitTest.Students;
 
 public class StudentControllerTest(WebApplicationFactory<Program> factory)
     : IClassFixture<WebApplicationFactory<Program>>

@@ -1,4 +1,4 @@
-namespace University.UnitTest.StudentsTests;
+namespace University.UnitTest.Students;
 
 public class RegisterStudentRequest
 {
