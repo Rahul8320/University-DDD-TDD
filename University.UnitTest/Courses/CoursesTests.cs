@@ -13,8 +13,26 @@ public class CoursesTests(WebApplicationFactory<Program> factory) : IClassFixtur
     {
         var api = new CoursesApi(_factory.CreateClient());
 
-        var response = await api.IncludeInCatalog();
+        var (response, course) = await api.IncludeInCatalog();
+
         ItShouldIncludeTheCourseInTheCatalog(response);
+        ItShouldAllocateANewId(course);
+        ItShouldShowWhereToLocateNewCourse(response, course);
+    }
+
+    private static void ItShouldShowWhereToLocateNewCourse(HttpResponseMessage response, CourseResponse? course)
+    {
+        var location = response.Headers.Location;
+        var uri = $"/api/courses/{course?.Id}";
+
+        Assert.NotNull(location);
+        Assert.Equal(uri.ToString(), location.ToString());
+    }
+
+    private static void ItShouldAllocateANewId(CourseResponse? course)
+    {
+        Assert.NotNull(course);
+        Assert.NotEqual(Guid.Empty, course.Id);
     }
 
     private static void ItShouldIncludeTheCourseInTheCatalog(HttpResponseMessage response)
