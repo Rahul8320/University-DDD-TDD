@@ -24,7 +24,7 @@ public class RoomsApi(HttpClient client)
 
     public static Uri UriForRoomId(Guid? roomId)
     {
-        return new Uri($"http://localhost/rooms/{roomId}");
+        return new Uri($"http://localhost/api/Rooms/{roomId}");
     }
 
     public async Task<(HttpResponseMessage, RoomResponse?)> GetRoom(Guid id)
